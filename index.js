@@ -53,6 +53,11 @@ function pollCaptcha(captchaId, options, invalid, callback) {
             });
         });
 
+        request.on('error', function(err) {
+            clearInterval(intervalId);
+            callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
+        });
+
         request.end();
     }, (options.pollingInterval || defaultOptions.pollingInterval));
 }
