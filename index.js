@@ -113,6 +113,11 @@ module.exports.decode = function(base64, options, callback) {
             }, callback);
         });
     });
+    
+    request.on('error', function(err) {
+        callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
+    });
+    
     request.write(postData)
     request.end();
 };
