@@ -17,14 +17,18 @@ var apiResUrl = 'http://2captcha.com/res.php';
 var apiMethod = 'base64';
 
 var defaultOptions = {
+    initialPoll: 10000,
     pollingInterval: 2000,
     retries: 3
 };
 
 
 function pollCaptcha(captchaId, options, invalid, callback) {
+    var pollingInterval = options.pollingInterval || defaultOptions.pollingInterval;
+
     invalid = invalid.bind({options:options,captchaId:captchaId});
-    var intervalId = setInterval(function() {
+
+    function doPoll() {
         var httpRequestOptions = url.parse(apiResUrl + '?action=get&key=' + apiKey + '&id=' + captchaId);
         var request = http.request(httpRequestOptions, function(response) {
             var body = '';
@@ -35,10 +39,9 @@ function pollCaptcha(captchaId, options, invalid, callback) {
 
             response.on('end', function() {
                 if (body === 'CAPCHA_NOT_READY'){
+                    setTimeout(doPoll, pollingInterval);
                     return;
                 }
-
-                clearInterval(intervalId);
 
                 var result = body.split('|');
                 if (result[0] !== 'OK') {
@@ -54,12 +57,13 @@ function pollCaptcha(captchaId, options, invalid, callback) {
         });
 
         request.on('error', function(err) {
-            clearInterval(intervalId);
             callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
         });
 
         request.end();
-    }, (options.pollingInterval || defaultOptions.pollingInterval));
+    }
+
+    setTimeout(doPoll, options.initialPoll || defaultOptions.initialPoll)
 }
 
 module.exports.setApiKey = function(key) {
