@@ -56,9 +56,7 @@ function pollCaptcha(captchaId, options, invalid, callback) {
             });
         });
 
-        request.on('error', function(err) {
-            callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
-        });
+        request.on('error', callback);
 
         request.end();
     }
@@ -129,9 +127,7 @@ module.exports.decode = function(data, options, callback) {
         });
     });
 
-    request.on('error', function(err) {
-        callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
-    });
+    request.on('error', callback);
 
     request.write(postData);
     request.end();
