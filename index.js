@@ -66,7 +66,7 @@ module.exports.setApiKey = function(key) {
     apiKey = key;
 };
 
-module.exports.decode = function(base64, options, callback) {
+module.exports.decode = function(data, options, callback) {
     if(!callback){
         callback = options;
         options = defaultOptions;
@@ -74,10 +74,16 @@ module.exports.decode = function(base64, options, callback) {
     var httpRequestOptions = url.parse(apiInUrl);
     httpRequestOptions.method = 'POST';
 
+    var body = data;
+
+    if (Buffer.isBuffer(data)) {
+        body = data.toString('base64');
+    }
+
     var postData = {
         method: apiMethod,
         key: apiKey,
-        body: base64
+        body: body
     };
 
     postData = querystring.stringify(postData);
@@ -118,12 +124,12 @@ module.exports.decode = function(base64, options, callback) {
             }, callback);
         });
     });
-    
+
     request.on('error', function(err) {
         callback('COULD_NOT_CONNECT_TO_CAPTCHA_SERVER');
     });
-    
-    request.write(postData)
+
+    request.write(postData);
     request.end();
 };
 
