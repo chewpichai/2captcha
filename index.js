@@ -142,9 +142,9 @@ module.exports.decodeUrl = function(uri, options, callback) {
     if (uri.indexOf('https') == 0)
         protocol = https;
 
-    var options = url.parse(uri);
+    var requestOptions = url.parse(uri);
 
-    var request = protocol.request(options, function(response) {
+    var request = protocol.request(requestOptions, function(response) {
         var body = '';
         response.setEncoding('base64');
 
