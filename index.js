@@ -203,7 +203,7 @@ module.exports.solveRecaptchaFromHtml = function(html, options, callback){
     request.end();
 };
 
-module.exports.report = function(captchaId){
+module.exports.report = function(captchaId, callback){
     var reportUrl = apiResUrl+'?action=reportbad&key='+apiKey+'&id='+captchaId;
     var options = url.parse(reportUrl);
 
@@ -214,8 +214,7 @@ module.exports.report = function(captchaId){
             body += chunk;
         });
 
-        response.on('end', function() {
-        });
+        response.on('end', callback);
     });
     request.end();
 };

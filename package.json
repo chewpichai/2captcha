@@ -1,5 +1,5 @@
 {
-    "name": "@jnv/2captcha",
+    "name": "2captcha",
     "version": "2.0.0",
     "description": "A wrapper for the 2Captcha API",
     "main": "index.js",
@@ -13,6 +13,6 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jnv/2captcha.git"
+        "url": "https://github.com/chewpichai/2captcha.git"
     }
 }
